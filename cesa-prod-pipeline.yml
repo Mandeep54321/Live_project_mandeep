@@ -100,7 +100,7 @@ resources:
   - pipeline: ces-kiosk-api
     project: CES
     source: ces\ces-kiosk\ces-kiosk-api-ci
-    branch: release/release-2.4.0
+    branch: release/release-3.3.3
   - pipeline: ces-standard-api
     project: CES
     source: ces\ces-standard\ces-standard-webapi-build
