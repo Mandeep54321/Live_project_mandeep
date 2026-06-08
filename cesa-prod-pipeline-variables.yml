@@ -1,0 +1,697 @@
+variables:
+  #=============================================================================
+  # Common
+  #=============================================================================
+  env.name:                                 'cesa-prod'
+  env.name.upper:                           'CESA-PROD'
+  env.name.short:                           'prod'
+  env.name.short.upper:                     'PROD'
+  customer.name:                            'cesa'
+  customer.name.upper:                      'CESA'
+  timezone:                                 'Cen. Australia Standard Time' # https://ss64.com/timezones.html
+  base.deploy.folder:                       'F:\CES\$(env.name)'
+  log.path:                                 '\\stproddocb81c.file.core.windows.net\$(env.name.short)\Logs'
+  nlog.level:                               'Warn'
+  appinsights.key:                          '$(sec.appinsights.key)'
+  pfx.path:                                 'civicaed.pfx'
+  pfx.secret:                               '$(sec.pfx.secret)'
+  base.docpath:                             '\\stproddocb81c.file.core.windows.net\$(env.name.short)\Data'
+  env.production:                           true
+  app.name:                                 'Civica Education Suite'
+  app.name.acronym:                         'CES'
+  isdevenv:                                 false # Controls detailed output in app_offline.htm [do not set to 'true' for customer environments
+  ces.release.name:                         '2.5'
+
+  #=============================================================================
+  # Multi-tenant
+  #=============================================================================
+  multitenant.codes: '[
+    "$(customer.name)"
+  ]'
+  multitenant.finance.codes: '[
+    "$(customer.name)|https://$(customer.name)-auth.civicaed.com.au"
+  ]'
+
+  #=============================================================================
+  # SMTP
+  #=============================================================================
+  smtp.sender:                              '$(env.name)-noreply@cesa.catholic.edu.au'
+  smtp.sender.firstname:                    'System'
+  smtp.sender.mobile:                       '0123456789'
+  smtp.server:                              'smtp.sendgrid.net'
+  smtp.username:                            'apikey'
+  smtp.password:                            '$(sec.smtp.password)'
+  smtp.port:                                '587'
+
+  #=============================================================================
+  # Auth Secrets
+  #=============================================================================
+  ces.audience.secret:                      '$(sec.ces.audience.secret)'
+  ces.apiauth.secret:                       '$(sec.ces.apiauth.secret)'
+  ces.cemobileauth.secret:                  '$(sec.ces.cemobileauth.secret)'
+  ces.financeauth.secret:                   '$(sec.ces.financeauth.secret)'
+  ces.frogauth.secret:                      '$(sec.ces.frogauth.secret)'
+  ces.tpauth.secret:                        '$(sec.ces.tpauth.secret)'
+  ces.kioskauth.secret:                     '$(sec.ces.kioskauth.secret)'
+
+  #=============================================================================
+  # CES
+  #=============================================================================
+  ces.auth.type:                            'Forms'
+  ces.cacheprovider:                        'NoCacheProvider'
+  ces.resetpassword.secret:                 '$(sec.ces.resetpassword.secret)'
+  ces.twofactor.secret:                     '$(sec.ces.twofactor.secret)'
+  ces.app.username:                         '.\svc.civica' # Service Account
+  ces.app.password:                         '$(sec.ces.app.password)' # Service Account
+  ces.commcenter.enabled:                   false
+  ces.notificationhub.sas:                  '$(sec.notificationhub.sas)'
+  ces.notificationhub.sas.listen:           '$(sec.notificationhub.sas.listen)'
+  ces.notificationhub.name:                 '$(env.name)'
+  ces.licence.path:                         '~/Licence.xml'
+  ces.usetestusers:                         true
+  ces.appinsights.enable:                   false
+  ces.webapiservice.log.db:                 'Frog,Wonde'
+  ces.webapiservice.log.file:               'Frog'
+  ces.webapiservice.file.path:              '$(base.docpath)\Documents\Canvas'
+  ces.debugging:                            false
+  ces.auditing:                             true
+  ces.env:                                  'release'
+  ces.webapp.env:                           'immediate'
+  ces.core.theme.css.path:                  '~/Content/Styles/common_blue.css'
+  ces.core.theme.favicon.path:              '~/Content/Images/Blue_Theme/favicon.ico'
+  ces.core.theme.kendo.path:                '~/Content/Styles/Kendo/kendo.civica_blue.css'
+  ces.core.logintimeoutminutes:             '120'
+  ces.core.idletimeoutminutes:              '120'
+  ces.core.idlewarningseconds:              '60'
+  ces.core.displayeducationsupport:         true
+  ces.core.displayhealthcaresummary:        true
+  ces.core.bulkuploadmaxfilesizemb:         '1024'
+
+  #=============================================================================
+  # Finance
+  #=============================================================================
+  # Finance - General configuration
+
+  cef.app.username:                         '$(ces.app.username)'
+  cef.app.password:                         '$(ces.app.password)'
+  cef.portalsync.client.secret:             '$(portal.idp.sync.secret)'
+  cef.licence.number:                       'THM#PAR01Q47'
+  cef.licence.key:                          '$(sec.cef.licence.key)'
+  cef.finance.odbc.connection:              '$(env.name.short)'
+  cef.finance.odbc.oidc.connection:         'cef_oidc'
+  cef.finance.odbc.driver.name:             'ODBC Driver 17 for SQL Server'
+  cef.finance.odbc.driver.path:             'C:\\Windows\\system32\\msodbcsql17.dll'
+  # Finance - Path configuration
+  cef.path.docpath:                         '$(base.docpath)\Finance\docs'
+  cef.path.maxcachepath:                    '$(base.docpath)\Finance\menu_cache'
+  cef.path.maxlogpath:                      '$(log.path)\Finance'
+  cef.path.comlogpath:                      '$(log.path)\Finance\comm'
+  cef.path.publishdocpath:                  '$(base.docpath)\Finance\docs_publish'
+  cef.path.emailpath:                       '$(base.docpath)\Finance\attachments'
+  cef.path.maxrptpath:                      '$(base.docpath)\Finance\reports'
+  cef.path.maxtmppath:                      '$(base.docpath)\Finance\tmp'
+  cef.path.maxuploadpath:                   '$(base.docpath)\Finance\uploads'
+  cef.path.picpath:                         '$(base.docpath)\Finance\pic'
+  cef.path.cefdir:                          '$(webapp.path.finance)'
+  cef.path.fgldir:                          'C:\Program Files\FourJs\fgl'
+  cef.path.gredir:                          'C:\Program Files\FourJs\gre'
+  cef.path.gasdir:                          'C:\Program Files\FourJs\gas'
+  cef.path.genweb:                          '$(webapp.path.finance)\genweb'
+  cef.path.isapidispatch.lib:               '$(cef.path.gasdir)\bin\isapidispatch.dll'
+  # Finance - as.xcf configuration
+  cef.as.template:                          '$(cef.path.genweb)\etc\as.tpl'
+  cef.as.path:                              '$(cef.path.genweb)\etc\as.xcf'
+  cef.as.rooturlprefix:                     '$(website.url.finance)/cefinance'
+  cef.as.resaccesscontrol:                  'ALL'
+  cef.as.reslogcategoriesfilter:            'GAS ACCESS PROCESS DEPRECATED ERROR WARNING'
+  cef.as.resdispatchersocketpath:           '$(cef.path.genweb)\tmp'
+  cef.as.resfgldir:                         '$(cef.path.fgldir)'
+  cef.as.resgredir:                         '$(cef.path.gredir)'
+  cef.as.respathas:                         '$(cef.path.gasdir)'
+  cef.as.rescefdir:                         '$(cef.path.cefdir)'
+  cef.as.respathdocroot:                    '$(cef.path.genweb)'
+  cef.as.respathidpdocroot:                 '$(cef.path.genweb)'
+  cef.as.maxdir:                            '$(cef.path.cefdir)'
+  cef.as.emailfile:                         '$(cef.path.emailpath)'
+  cef.as.reslogoutputpath:                  '$(cef.path.maxlogpath)'
+  cef.as.fglwsdebug:                        '0' 
+  cef.as.resicbaseport:                     '6400'
+  cef.as.resicadminport:                    '6495'
+  cef.as.apptimeoutrequestresult:           '45'
+  # Finance - cefinancenonsso.xcf configuration
+  cef.cefinancenonsso.template:             '$(cef.path.genweb)\app\cefinancenonsso.tpl'
+  cef.cefinancenonsso.path:                 '$(cef.path.genweb)\app\cefinancenonsso.xcf'
+  cef.cefinancenonsso.fgldebug:             '0'
+  cef.cefinancenonsso.fglprofile:           '$(cef.fglprofile.path)'
+  cef.cefinancenonsso.picpath:              '$(cef.path.picpath)'
+  cef.cefinancenonsso.cefcomlogpath:        '$(cef.path.comlogpath)'
+  cef.cefinancenonsso.docpath:              '$(cef.path.docpath)'
+  cef.cefinancenonsso.publishdocpath:       '$(cef.path.publishdocpath)'
+  cef.cefinancenonsso.maxlogpath:           '$(cef.path.maxlogpath)'
+  cef.cefinancenonsso.maxrptpath:           '$(cef.path.maxrptpath)'
+  cef.cefinancenonsso.emailfile:            '$(cef.path.emailpath)'
+  cef.cefinancenonsso.logouturl:            '$(website.url.cescore)'
+  cef.cefinancenonsso.cefhelp:              '$(website.url.cescore)/CEFHelp/Index.html'
+  cef.cefinancenonsso.idp:                  '$(website.url.cesauth)'
+  cef.cefinancenonsso.clientpublicid:       'CeFinance'
+  #cef.cefinancenonsso.clientsecretid:       ''
+  cef.cefinancenonsso.cesdatabase:          '$(mssql.finance.database)'
+  cef.cefinancenonsso.allowmanuallogin:     '1'
+  # Finance - cefinance.xcf configuration
+  cef.cefinance.template:                   '$(cef.path.genweb)\app\cefinance.tpl'
+  cef.cefinance.path:                       '$(cef.path.genweb)\app\cefinance.xcf'
+  cef.cefinance.fgldebug:                   '0'
+  cef.cefinance.fglprofile:                 '$(cef.fglprofile.path)'
+  cef.cefinance.picpath:                    '$(cef.path.picpath)'
+  cef.cefinance.cefcomlogpath:              '$(cef.path.comlogpath)'
+  cef.cefinance.docpath:                    '$(cef.path.docpath)'
+  cef.cefinance.publishdocpath:             '$(cef.path.publishdocpath)'
+  cef.cefinance.maxlogpath:                 '$(cef.path.maxlogpath)'
+  cef.cefinance.maxrptpath:                 '$(cef.path.maxrptpath)'
+  cef.cefinance.emailfile:                  '$(cef.path.emailpath)'
+  cef.cefinance.logouturl:                  '$(website.url.cescore)'
+  cef.cefinance.cefhelp:                    '$(website.url.cescore)/CEFHelp/Index.html'
+  cef.cefinance.idp:                        '$(website.url.cesauth)'
+  cef.cefinance.clientpublicid:             'CeFinance'
+  #cef.cefinance.clientsecretid:             ''
+  cef.cefinance.cesdatabase:                '$(mssql.master.database)'
+  cef.cefinance.allowmanuallogin:           '0'
+  # Finance - fglprofile configuration
+  cef.fglprofile.template:                  '$(cef.path.genweb)\etc\fglprofile.tpl'
+  cef.fglprofile.path:                      '$(cef.path.genweb)\etc\fglprofile'
+  cef.fglprofile.driver:                    'dbmsnc'
+  cef.fglprofile.odbc.database:             '$(mssql.finance.database)'
+  cef.fglprofile.odbc.oidc.database:        '$(mssql.finance.oidc.database)'
+  cef.fglprofile.odbc.username:             '$(mssql.finance.username)'
+  cef.fglprofile.odbc.password:             '$(mssql.finance.password)'
+  cef.fglprofile.licence.number:            '$(cef.licence.number)'
+  cef.fglprofile.licence.key:               '$(cef.licence.key)'
+  cef.fglprofile.ifxemul:                   'true'
+  cef.fglprofile.ifxemul.datatype:          'native'
+  # Finance - FGLSHELL.bat configuration
+  cef.fglshell.template:                    '$(webapp.path.finance)\bin\FGLSHELL.bat.tpl'
+  cef.fglshell.path:                        '$(webapp.path.finance)\bin\FGLSHELL.bat'
+  cef.fglshell.cefdir:                      '$(cef.path.cefdir)'
+  cef.fglshell.maxdir:                      '%CEFDIR%'
+  cef.fglshell.fgldir:                      '$(cef.path.fgldir)'
+  cef.fglshell.gredir:                      '$(cef.path.gredir)'
+  cef.fglshell.fglprofile:                  '%MAXDIR%\genweb\etc\fglprofile'
+  cef.fglshell.publishdocpath:              '$(cef.path.publishdocpath)'
+  cef.fglshell.maxlogpath:                  '$(cef.path.maxlogpath)'
+  cef.fglshell.maxlogtype:                  'P'
+  cef.fglshell.docpath:                     '$(cef.path.docpath)'
+  cef.fglshell.picpath:                     '$(cef.path.picpath)'
+  cef.fglshell.maxrptpath:                  '$(cef.path.maxrptpath)'
+  cef.fglshell.fglimagepath:                '%MAXDIR%\genimg'
+  cef.fglshell.emailfile:                   '$(cef.path.emailpath)'
+  cef.fglshell.comlogpath:                  '$(cef.path.comlogpath)'
+  cef.fglshell.adminuser:                   'maximise'
+  # Finance - greportwriter.bat configuration
+  cef.greportwriter.template:               'C:\Program Files\FourJs\gre\bin\greportwriter.bat'
+  cef.greportwriter.path:                   'C:\Program Files\FourJs\gre\bin\greportwriter.bat'
+  cef.greportwriter.javahome:               'C:\Program FIles\Microsoft\'
+  cef.greportwriter.gredir:                 'C:\Program Files\FourJs\gre'
+  # Finance - cefcfg.xcf configuration
+  cef.cefcfg.template:                      '$(cef.path.genweb)\app\cefcfg.xcf.tpl'
+  cef.cefcfg.path:                          '$(cef.path.genweb)\app\cefcfg.xcf'
+  cef.cefcfg.cefwshost:                     '$(website.url.finance)'
+  cef.cefcfg.cpapihost:                     '$(website.url.portalapi)'
+  cef.cefcfg.cpidphost:                     '$(website.url.portalauth)'
+  cef.cefcfg.cpidpclientsecret:             '$(cef.portalsync.client.secret)'
+  cef.cefcfg.csmlabel:                      '$(app.name)'
+  cef.cefcfg.csmtla:                        '$(app.name.acronym)'
+  cef.cefcfg.tenants:                       '$(multitenant.finance.codes)'
+  cef.cefcfg.amqpapihost:                   'http://$(amqp.server.name):15672/api'
+  cef.cefcfg.amqpusername:                  'rabbit_admin'
+  cef.cefcfg.amqppassword:                  '$(sec.amqp.password)'
+  # Finance - isapidispatch.ini configuration
+  cef.isapidispatch.path:                   '$(cef.path.genweb)\isapidispatch.ini'
+  cef.isapidispatch.as.directory:           'C:\Program Files\FourJs\gas'
+  cef.isapidispatch.configuration.file:     '$(cef.as.path)'
+  # Finance - OpenIDConnectServiceProvider.xcf configuration
+  cef.oidcprovider.template:                'C:\Program Files\FourJs\fgl\web_utilities\services\OpenIDConnectServiceProvider.xcf'
+  cef.oidcprovider.path:                    'C:\Program Files\FourJs\fgl\web_utilities\services\OpenIDConnectServiceProvider.xcf'
+  # Finance - Service Templates
+  cef.services.templates:                   '$(cef.path.genweb)\services\templates'
+  cef.services.path:                        '$(cef.path.genweb)\services'
+  cef.services.fglprofile:                  '$(cef.fglprofile.path)'
+  cef.services.maxlogpath:                  '$(cef.path.maxlogpath)'
+
+  #=============================================================================
+  # Portal
+  #=============================================================================
+  portal.twofactor.secret:                  '$(sec.portal.twofactor.secret)'
+  portal.support.secret:                    '$(sec.portal.support.secret)'
+  portal.resetpassword.secret:              '$(sec.portal.resetpassword.secret)'
+  portal.guestupgrade.secret:               '$(sec.portal.guestupgrade.secret)'
+  portal.academicreports.idp:               'https://login.microsoftonline.com/324d0eab-8f46-4c94-aeff-237148fb968e/oauth2/v2.0/token'
+  portal.academicreports.reportlocation:    'https://cesa-reportsharing-prd.azurewebsites.net/api/fetchfile?year='
+  portal.academicreports.reporturl:         'https://cesa-reportsharing-prd.azurewebsites.net/api/listFiles?year='
+  portal.academicreports.clientid:          'ee347c21-7a57-446e-8d55-79869fc5b228'
+  portal.academicreports.clientsecret:      '$(sec.academicreport.secret)'
+  portal.academicreports.scope:             'https://cesa-reportsharing-prd.azurewebsites.net/.default'
+  portal.notificationhub.sas:               '$(sec.notificationhub.sas)'
+  portal.notificationhub.sas.listen:        '$(sec.notificationhub.sas.listen)'
+  portal.notificationhub.name:              'cesahub'
+  portal.idp.client.secret:                 '$(sec.portal.idp.client.secret)'
+  portal.idp.sync.secret:                   '$(sec.portal.idp.sync.secret)'
+  portal.idp.frog.secret:                   '$(sec.portal.idp.frog.secret)'
+  portal.env:                               'jurisdiction1'
+  portal.debugging:                         false
+  portal.dashboard.image:                   'assets/images/homepage-banner.jpg'
+  portal.logo:                              'assets/images/logo.png'
+  portal.noavatar.path:                     '/assets/images/th_noAvatarAvailable.svg'
+  portal.noimage.path:                      '/assets/images/th_noImageAvailable.svg'
+  portal.payment.bambora.merchant:          ''
+  portal.payment.bambora.active:            false
+  portal.payment.bambora.logo:              'https://cdn.na.bambora.com/downloads/images/cards/'
+  portal.payment.bambora.name:              'Bambora'
+  portal.payment.bambora.route:             'bambora-payment'
+  portal.payment.bambora.script:            'https://customcheckout-uat.bambora.net.au/1.0.0/customcheckout.js'
+  portal.payment.nab.merchant:              ''
+  portal.payment.nab.active:                true
+  portal.payment.nab.logo:                  ''
+  portal.payment.nab.name:                  'NAB'
+  portal.payment.nab.route:                 'nab-payment'
+  portal.payment.nab.script:                'https://gateway.nab.com.au/form/version/57/merchant/{MERCHANTID}/session.js?debug=false'
+  portal.sync.payment.provider:             '$(portal.payment.nab.name)' # Change to portal.payment.nab.name or portal.payment.bambora.name depending on client
+  portal.guestlogin.enabled:                true 
+  portal.jurisdiction.name:                 '$(app.name)'
+  portal.jurisdiction.logo:                 '$(website.url.portalauth)/Theme/GetGeneralProperty?jurisdictionId=1&propertyDescription=MobileAppLogo'
+  portal.appinsights.enable:                false
+  portal.log.level:                         'Warning'
+  portal.licence.path:                      'Licence.xml'
+  portal.amqp.virtualhost:                  'community_portal'
+
+  #=============================================================================
+  # Licence
+  #=============================================================================
+  licensing.output:                         '$(base.deploy.folder)\Licence.xml'
+  licensing.servers:                        'cssppprs1,cssppprs2,cssppprc1,cssppprc2,cssppint1,csspptoo1'
+  licensing.components:                     'CPS,SchoolAdmin,Admin,Timetabling,TeacherToolkit,Reporting,Jurisdiction,PurchaseRequisition,CommunityPortal,FormBuilder,Billing,StandardIntegration,Finance,AttendanceKiosk'
+
+  #=============================================================================
+  # Database
+  #=============================================================================
+  mongodb.server.name:                      'cescesaprodmdb1.civica.internal'
+  mongodb.server.replicaset:                'rs0'  
+  mongodb.server.port:                      27017
+  mongodb.portal.database:                  'CommunityPortal_CESA_PROD'
+  mongodb.portal.username:                  'svc.cp.mdb.cesa.prod' #'CommunityPortalMaster'
+  mongodb.portal.password:                  '$(sec.mongodb.portal.password)'
+  mongodb.portal.connectionstring:          'mongodb://$(mongodb.portal.username):$(mongodb.portal.password)@$(mongodb.server.name)/$(mongodb.portal.database)?replicaSet=$(mongodb.server.replicaset)&tls=false&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+  mongodb.standard.audit.database:          'Audit_CESA_PROD'
+  mongodb.standard.audit.username:          'svc.audit.mdb.cesa.prod' #'StandardIntegrationMaster'
+  mongodb.standard.audit.password:          '$(sec.mongodb.standard.audit.password)'
+  mongodb.standard.audit.connectionstring:  'mongodb://$(mongodb.standard.audit.username):$(mongodb.standard.audit.password)@$(mongodb.server.name)/$(mongodb.standard.audit.database)?replicaSet=$(mongodb.server.replicaset)&tls=false&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+  mongodb.standard.database:                'StandardIntegration_CESA_PROD'
+  mongodb.standard.username:                'svc.si.mdb.cesa.prod' #'StandardIntegrationMaster'
+  mongodb.standard.password:                '$(sec.mongodb.standard.password)'
+  mongodb.standard.connectionstring:        'mongodb://$(mongodb.standard.username):$(mongodb.standard.password)@$(mongodb.server.name)/$(mongodb.standard.database)?replicaSet=$(mongodb.server.replicaset)&tls=false&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000'
+  
+  mssql.server.name:                        'sqlmi-prod-pctg.cb6722ddd4a2.database.windows.net'
+  mssql.sa.username:                        'civica'
+  mssql.sa.password:                        '$(sec.mssql.sa.password)'
+  mssql.master.database:                    'CES_CESA_PROD'
+  mssql.master.username:                    'svc.ces.sql.cesa.prod' #'svc.ces.sql.app'
+  mssql.master.password:                    '$(sec.mssql.master.password)'
+  mssql.readonly.username:                  'svc.rpt.sql.cesa.prod' #'svc.ces.sql.rpt'
+  mssql.readonly.password:                  '$(sec.mssql.readonly.password)'
+  mssql.audit.database:                     'CES_CESA_PROD_Audit'
+  mssql.finance.database:                   'CEF_CESA_PROD'
+  mssql.finance.username:                   'svc.cef.sql.cesa.prod' #'svc.cef.sql.app'
+  mssql.finance.password:                   '$(sec.mssql.finance.password)'
+  mssql.finance.oidc.database:              'CEF_CESA_PROD_OIDC'
+  mssql.finance.oidc.username:              'svc.cef.sql.cesa.prod' #'svc.cef.sql.app'
+  mssql.finance.oidc.password:              '$(sec.mssql.finance.oidc.password)'
+  mssql.finance.connectionstring:           'Data Source=$(mssql.server.name);Initial Catalog=$(mssql.finance.database);User ID=$(mssql.finance.username);Password=$(mssql.finance.password);MultipleActiveResultSets=True;Max Pool Size=1500;'
+  mssql.master.connectionstring:            'Data Source=$(mssql.server.name);Initial Catalog=$(mssql.master.database);User ID=$(mssql.sa.username);Password=$(mssql.sa.password);MultipleActiveResultSets=True;Max Pool Size=1500;'
+  mssql.master.connectionstring.read:       'Data Source=$(mssql.server.name);Initial Catalog=$(mssql.master.database);User ID=$(mssql.readonly.username);Password=$(mssql.readonly.password);MultipleActiveResultSets=True;Max Pool Size=1500;'
+  mssql.audit.connectionstring:             'Data Source=$(mssql.server.name);Initial Catalog=$(mssql.audit.database);User ID=$(mssql.sa.username);Password=$(mssql.sa.password);MultipleActiveResultSets=True;Max Pool Size=1500;'
+  mssql.sif.database:                       'CES_$(customer.name.upper)_$(env.name.short.upper)_SIF'
+  mssql.sif.connectionstring:               'Data Source=$(mssql.server.name);Initial Catalog=$(mssql.sif.database);User ID=$(mssql.master.username);Password=$(mssql.master.password);MultipleActiveResultSets=True;Max Pool Size=1500;'  
+
+  redis.server.name:                        'ces-cesa-cesa-prod-prod-redis-siva.redis.cache.windows.net'
+  redis.server.port:                        6380
+  redis.password:                           '$(sec.redis.password)'
+  redis.connectionstring:                   '$(redis.server.name):$(redis.server.port),password=$(redis.password),ssl=True,abortConnect=False,syncTimeout=10001,keepAlive=120'
+
+  #=============================================================================
+  # SIF
+  #=============================================================================
+  sif.allowedsectors:                       'Gov'
+  sif.edidasstudentid:                      'false'
+  sif.includefuture:                        'true'
+  sif.includepast:                          'true'
+  sif.oneobjectperstudent:                  'true'
+  sif.settimeframetocurrentonupdate:        'false'
+  sif.studentidupdateonly:                  'true'
+
+  #=============================================================================
+  # LISS
+  #=============================================================================
+  liss.enableedval:                         'true'
+  liss.enableuseparttime:                   'true'
+
+  #=============================================================================
+  # Tools
+  #=============================================================================
+  tool.path.dataload:                       '$(base.deploy.folder)\Tools\'
+  tool.path.generalseeding:                 '$(base.deploy.folder)\Tools\Seeding\'
+  tool.path.archiveseeding:                 '$(base.deploy.folder)\Tools\Seeding\'
+  tool.path.financeseeding:                 '$(base.deploy.folder)\Tools\Seeding\'
+  tool.path.portalseeding:                  '$(base.deploy.folder)\Tools\Seeding\'
+  tool.path.cesdatabaseupgrade:             '$(base.deploy.folder)\Database\CES\'
+  tool.path.cefdatabaseupgrade:             '$(base.deploy.folder)\Database\CEF\'
+  tool.path.cpdatabaseupgrade:              '$(base.deploy.folder)\Database\CP\'
+
+  #=============================================================================
+  # RabbitMQ
+  #=============================================================================
+  amqp.server.name:                         'csspprab1.civica.internal'
+  amqp.app.username:                        'rabbit_admin'
+  amqp.app.password:                        '$(sec.amqp.app.password)'
+  amqp.event.queue.enabled:                 true
+  amqp.event.queue.publish:                 false
+  amqp.event.queue.dispatch:                false
+  
+
+  #=============================================================================
+  # Websites
+  #=============================================================================
+  # +---------------+--------+
+  # | Site          | Port   |
+  # +---------------+--------+
+  # | CES Core      | 8100   |
+  # | CES Auth      | 8101   |
+  # | CES API       | 8102   |
+  # | Portal Core   | 8103   |
+  # | Portal Auth   | 8104   |
+  # | Portal API    | 8105   |
+  # | Portal Sync   | 8106   |
+  # | Kiosk UI      | 8107   |
+  # | Kiosk API     | 8108   |
+  # | Standard API  | 8109   |
+  # | Standard Auth | 8110   |
+  # | CES SIF       | 8111   |
+  # | CES LISS      | 8112   |
+  # | CE Finance    | 8113   |
+  # | CES SMS       | 8114   |
+  # +---------------+--------+
+  # CES Core
+  website.url.cescore:                      'https://$(customer.name).civicaed.com.au'
+  website.port.cescore:                     '8100'
+  website.name.cescore:                     'CES Core'
+  website.path.cescore:                     '$(base.deploy.folder)\Websites\$(website.name.cescore)'
+  website.dotnetversion.cescore:            'v4.0'
+  website.pipelinemode.cescore:             'Integrated'
+  website.envname.cescore:                  '$(website.name.cescore) $(env.name)'
+  # CES Auth
+  website.url.cesauth:                      'https://$(customer.name)-auth.civicaed.com.au'
+  website.port.cesauth:                     '8101'
+  website.name.cesauth:                     'CES Auth'
+  website.path.cesauth:                     '$(base.deploy.folder)\Websites\$(website.name.cesauth)'
+  website.dotnetversion.cesauth:            'No Managed Code'
+  website.pipelinemode.cesauth:             'Integrated'
+  # CES API
+  website.url.cesapi:                       'https://$(customer.name)-api.civicaed.com.au'
+  website.port.cesapi:                      '8102'
+  website.name.cesapi:                      'CES API'
+  website.path.cesapi:                      '$(base.deploy.folder)\Websites\$(website.name.cesapi)'
+  website.dotnetversion.cesapi:             'v4.0'
+  website.pipelinemode.cesapi:              'Integrated'
+  # Portal Core
+  website.url.portalcore:                   'https://$(customer.name)-portal.civicaed.com.au'
+  website.port.portalcore:                  '8103'
+  website.name.portalcore:                  'Portal Core'
+  website.path.portalcore:                  '$(base.deploy.folder)\Websites\$(website.name.portalcore)'
+  website.dotnetversion.portalcore:         'No Managed Code'
+  website.pipelinemode.portalcore:          'Integrated'
+  # Portal Auth
+  website.url.portalauth:                   'https://$(customer.name)-portal-auth.civicaed.com.au'
+  website.port.portalauth:                  '8104'
+  website.name.portalauth:                  'Portal Auth'
+  website.path.portalauth:                  '$(base.deploy.folder)\Websites\$(website.name.portalauth)'
+  website.dotnetversion.portalauth:         'No Managed Code'
+  website.pipelinemode.portalauth:          'Integrated'
+  # Portal API
+  website.url.portalapi:                    'https://$(customer.name)-portal-api.civicaed.com.au'
+  website.port.portalapi:                   '8105'
+  website.name.portalapi:                   'Portal API'
+  website.path.portalapi:                   '$(base.deploy.folder)\Websites\$(website.name.portalapi)'
+  website.dotnetversion.portalapi:          'No Managed Code'
+  website.pipelinemode.portalapi:           'Integrated'
+  # Portal Sync
+  website.url.portalsync:                   'https://$(customer.name)-portal-sync.civicaed.com.au'
+  website.port.portalsync:                  '8106'
+  website.name.portalsync:                  'Portal Sync'
+  website.path.portalsync:                  '$(base.deploy.folder)\Websites\$(website.name.portalsync)'
+  website.dotnetversion.portalsync:         'No Managed Code'
+  website.pipelinemode.portalsync:          'Integrated'
+  # Kiosk UI
+  website.url.kioskui:                      'https://$(customer.name)-kiosk.civicaed.com.au'
+  website.port.kioskui:                     '8107'
+  website.name.kioskui:                     'CES Kiosk UI'
+  website.path.kioskui:                     '$(base.deploy.folder)\Websites\$(website.name.kioskui)'
+  website.dotnetversion.kioskui:            'No Managed Code'
+  website.pipelinemode.kioskui:             'Integrated'
+  # Kiosk API
+  website.url.kioskapi:                     'https://$(customer.name)-kiosk-api.civicaed.com.au'
+  website.port.kioskapi:                    '8108'
+  website.name.kioskapi:                    'CES Kiosk API'
+  website.path.kioskapi:                    '$(base.deploy.folder)\Websites\$(website.name.kioskapi)'
+  website.dotnetversion.kioskapi:           'No Managed Code'
+  website.pipelinemode.kioskapi:            'Integrated'
+  # Standard API
+  website.url.standardapi:                  'https://$(customer.name)-std-api.civicaed.com.au'
+  website.port.standardapi:                 '8109'
+  website.name.standardapi:                 'CES Standard API'
+  website.path.standardapi:                 '$(base.deploy.folder)\Websites\$(website.name.standardapi)'
+  website.dotnetversion.standardapi:        'No Managed Code'
+  website.pipelinemode.standardapi:         'Integrated'
+  # Standard Auth
+  website.url.standardidp:                  'https://$(customer.name)-std-idp.civicaed.com.au'
+  website.port.standardidp:                 '8110'
+  website.name.standardidp:                 'CES Standard Auth'
+  website.path.standardidp:                 '$(base.deploy.folder)\Websites\$(website.name.standardidp)'
+  website.dotnetversion.standardidp:        'No Managed Code'
+  website.pipelinemode.standardidp:         'Integrated'
+  # CES SIF
+  website.url.sif:                          'https://$(customer.name)-sif.civicaed.com.au'
+  website.port.sif:                         '8111'
+  website.name.sif:                         'CES SIF'
+  website.path.sif:                         '$(base.deploy.folder)\Websites\$(website.name.sif)'
+  website.dotnetversion.sif:                'v4.0'
+  website.pipelinemode.sif:                 'Integrated'
+  # CES LISS
+  website.url.liss:                         'https://$(customer.name)-liss.civicaed.com.au'
+  website.port.liss:                        '8112'
+  website.name.liss:                        'CES LISS'
+  website.path.liss:                        '$(base.deploy.folder)\Websites\$(website.name.liss)'
+  website.dotnetversion.liss:               'v4.0'
+  website.pipelinemode.liss:                'Integrated'
+  # CE Finance (site)
+  website.url.finance:                      'https://$(customer.name)-fin.civicaed.com.au'
+  website.port.finance:                     '8113'
+  website.name.finance:                     'CE Finance $(env.name)'
+  website.path.finance:                     '$(base.deploy.folder)\Websites\cefinance_root_redirect'
+  website.redirect.finance:                 '$(website.url.finance)/cefinance/ua/r/cefinance'
+  website.dotnetversion.finance:            'v4.0'
+  website.pipelinemode.finance:             'Integrated'
+  # CES SMS
+  website.url.sms:                          'https://$(customer.name)-sms.civicaed.com.au'
+  website.port.sms:                         '8114'
+  website.name.sms:                         'CES SMS Listener'
+  website.path.sms:                         '$(base.deploy.folder)\Websites\$(website.name.sms)'
+  website.dotnetversion.sms:                'v4.0'
+  website.pipelinemode.sms:                 'Integrated'
+  # Frog
+  website.url.frog:                         'https://$(customer.name)-frog.civicaed.com.au'
+
+  #=============================================================================
+  # Web Application
+  #=============================================================================
+  # Core/UI
+  webapp.parent.ui:                         '$(website.name.cescore)'
+  webapp.name.ui:                           '$(webapp.shortname.ui)'
+  webapp.shortname.ui:                      'UI'
+  webapp.path.ui:                           '$(website.path.cescore)\$(webapp.shortname.ui)'
+  webapp.vpath.ui:                          '$(webapp.shortname.ui)'
+  webapp.dotnetversion.ui:                  'v4.0'
+  webapp.pipelinemode.ui:                   'Integrated'
+  # Core/TeacherToolkit
+  webapp.parent.teachertoolkit:             '$(website.name.cescore)'
+  webapp.name.teachertoolkit:               '$(webapp.shortname.teachertoolkit)'
+  webapp.shortname.teachertoolkit:          'TeacherToolkit'
+  webapp.path.teachertoolkit:               '$(website.path.cescore)\$(webapp.shortname.teachertoolkit)'
+  webapp.vpath.teachertoolkit:              '$(webapp.shortname.teachertoolkit)'
+  webapp.dotnetversion.teachertoolkit:      'No Managed Code'
+  webapp.pipelinemode.teachertoolkit:       'Integrated'
+  # Core/TimetableModelling
+  webapp.parent.timetablemodelling:         '$(website.name.cescore)'   
+  webapp.name.timetablemodelling:           '$(webapp.shortname.timetablemodelling)'
+  webapp.shortname.timetablemodelling:      'TimetableModelling'
+  webapp.path.timetablemodelling:           '$(website.path.cescore)\$(webapp.shortname.timetablemodelling)'
+  webapp.vpath.timetablemodelling:          '$(webapp.shortname.timetablemodelling)'
+  webapp.dotnetversion.timetablemodelling:  'No Managed Code'
+  webapp.pipelinemode.timetablemodelling:   'Integrated'
+  # Core/CESHelp
+  webapp.parent.ceshelp:                    '$(website.name.cescore)'
+  webapp.name.ceshelp:                      '$(webapp.shortname.ceshelp)'
+  webapp.shortname.ceshelp:                 'Help'
+  webapp.path.ceshelp:                      '$(website.path.cescore)\$(webapp.shortname.ceshelp)'
+  webapp.vpath.ceshelp:                     '$(webapp.shortname.ceshelp)'
+  webapp.dotnetversion.ceshelp:             'v4.0'
+  webapp.pipelinemode.ceshelp:              'Integrated'
+  # Core/CEFHelp
+  webapp.parent.cefhelp:                    '$(website.name.cescore)'
+  webapp.name.cefhelp:                      '$(webapp.shortname.cefhelp)'
+  webapp.shortname.cefhelp:                 'CEFHelp'
+  webapp.path.cefhelp:                      '$(website.path.cescore)\$(webapp.shortname.cefhelp)'
+  webapp.vpath.cefhelp:                     '$(webapp.shortname.cefhelp)'
+  webapp.dotnetversion.cefhelp:             'v4.0'
+  webapp.pipelinemode.cefhelp:              'Integrated'
+  # CE Finance (app)
+  webapp.parent.finance:                    '$(website.name.finance)'
+  webapp.name.finance:                      'cefinance'
+  webapp.shortname.finance:                 'cefinance'
+  webapp.path.finance:                      '$(base.deploy.folder)\Websites\cefinance'
+  webapp.vpath.finance:                     '$(webapp.shortname.finance)'
+  webapp.dotnetversion.finance:             'No Managed Code'
+  webapp.pipelinemode.finance:              'Classic'
+
+  #=============================================================================
+  # Google
+  #=============================================================================
+  portal.google.client.id:                  '#GOOGLECLIENTID#'
+  portal.google.client.secret:              '$(sec.google.client.secret)'
+  portal.google.address.key:                '$(sec.google.address.key)'
+  ces.google.address.key:                   '$(sec.google.address.key)'
+  ces.google.distance.key:                  '$(sec.google.distance.key)'
+  portal.google.distance.key:               '$(sec.google.distance.key)'
+  portal.google.captcha.secret.key:         '$(sec.google.captcha.secret.key)'
+  portal.google.captcha.site.key:           '$(sec.google.captcha.site.key)'
+
+  #=============================================================================
+  # Apple
+  #=============================================================================
+  portal.apple.client.id:                   '$(sec.apple.client.id)'
+  portal.apple.client.secret:               '$(sec.apple.client.secret)'
+  portal.apple.team.id:                     '$(sec.apple.team.id)'
+  portal.apple.private.key:                 '$(sec.apple.private.key)'
+  portal.apple.key.id:                      '$(sec.apple.key.id)'
+
+  #=============================================================================
+  # Soprano
+  #=============================================================================
+  soprano.username:                         '#SOPRANOUSER#'
+  soprano.password:                         '$(sec.soprano.password)'
+  soprano.accesstoken:                      '$(sec.soprano.accesstoken)'
+
+  #=============================================================================
+  # Legacy Variables
+  #=============================================================================
+  deploy.ces.app.user:                            $(ces.app.username)
+  deploy.ces.app.password:                        $(ces.app.password)
+  #deploy.secret.academicreportsclientsecret:    '$(sec.academicreport.secret)'
+  #deploy.secret.appleclientsecret:              '$(sec.apple.client.secret)'
+  #deploy.secret.appleprivatekey:                '$(sec.apple.private.key)'
+  #deploy.secret.audiencesecret:                 '$(sec.audience.secret)'
+  #deploy.secret.captchasecretkey:               '$(sec.google.captcha.secret.key)'
+  #deploy.secret.captchasitekey:                 '$(sec.google.captcha.site.key)'
+  #deploy.secret.financeauth:                    '$(sec.finance.auth.secret)'
+  #deploy.secret.frogauth:                       '$(sec.frog.auth.secret)'
+  #deploy.secret.googleapi:                      '$(sec.google.address.key)'
+  #deploy.secret.googleclientsecret:             '$(sec.google.client.secret)'
+  #deploy.secret.guestuseraccountupgradesecret:  '$(sec.upgrade.secret)'
+  #deploy.secret.idpclientsecret:                '$(sec.idp.client.secret)'
+  #deploy.secret.pfx:                            '$(sec.pfx.secret)'
+  #deploy.secret.resetpasswordsecret:            '$(sec.reset.secret)'
+  #deploy.secret.supportusertokensecret:         '$(sec.support.secret)'
+  #deploy.secret.twofactorsecret:                '$(sec.twofactor.secret)'
+
+  #=============================================================================
+  # Processing
+  #=============================================================================
+  #-----------------------------------------------------------------------------
+  # Top Shelf
+  #-----------------------------------------------------------------------------
+  # CESArchiveJobExecutor
+  service.name.cesarchivejobexecutor:           'CESArchiveJobExecutor-$(env.name)'
+  service.executable.cesarchivejobexecutor:     'Civica.CES.Archive.Job.Executor.exe'
+  service.path.cesarchivejobexecutor:           '$(base.deploy.folder)\Services\$(service.name.cesarchivejobexecutor)'
+
+  # CESAuditAMQPConsumers
+  service.name.cesauditamqpconsumers:           'CESAuditAMQPConsumers-$(env.name)'
+  service.executable.cesauditamqpconsumers:     'Civica.CES.Audit.Consumers.exe'
+  service.path.cesauditamqpconsumers:           '$(base.deploy.folder)\Services\$(service.name.cesauditamqpconsumers)'
+
+  # CESAMQPConsumers
+  service.name.cesamqpconsumers:                'CESAMQPConsumers-$(env.name)'
+  service.executable.cesamqpconsumers:          'Civica.CES.CommunityPortal.Consumers.exe'
+  service.path.cesamqpconsumers:                '$(base.deploy.folder)\Services\$(service.name.cesamqpconsumers)'
+
+  # CESCommCenterAMQPConsumersEmail
+  service.name.cescommcenteremail:              'CESCommCenterAMQPConsumersEmail-$(env.name)'
+  service.executable.cescommcenteremail:        'Civica.CES.CommunicationCenter.Consumers.exe'
+  service.path.cescommcenteremail:              '$(base.deploy.folder)\Services\$(service.name.cescommcenteremail)'
+
+  # CESCommCenterAMQPConsumersSMS
+  service.name.cescommcentersms:                'CESCommCenterAMQPConsumersSMS-$(env.name)'
+  service.executable.cescommcentersms:          'Civica.CES.CommunicationCenter.Consumers.exe'
+  service.path.cescommcentersms:                '$(base.deploy.folder)\Services\$(service.name.cescommcentersms)'
+
+  # CESFinanceJobExecutor
+  service.name.cesfinancejobexecutor:           'CESFinanceJobExecutor-$(env.name)'
+  service.executable.cesfinancejobexecutor:     'Civica.CES.Finance.Job.Executor.exe'
+  service.path.cesfinancejobexecutor:           '$(base.deploy.folder)\Services\$(service.name.cesfinancejobexecutor)'
+
+  # CESGeneralJobExecutor
+  service.name.cesgeneraljobexecutor:           'CESGeneralJobExecutor-$(env.name)'
+  service.executable.cesgeneraljobexecutor:     'Civica.CES.General.Job.Executor.exe'
+  service.path.cesgeneraljobexecutor:           '$(base.deploy.folder)\Services\$(service.name.cesgeneraljobexecutor)'
+
+  # CESJobExecutor
+  service.name.cesjobexecutor:                  'CESJobExecutor-$(env.name)'
+  service.executable.cesjobexecutor:            'Civica.CES.Job.Executor.exe'
+  service.path.cesjobexecutor:                  '$(base.deploy.folder)\Services\$(service.name.cesjobexecutor)'
+
+  # CESProcessingConsumers
+  service.name.cesprocessingconsumers:          'CESProcessingConsumers-$(env.name)'
+  service.executable.cesprocessingconsumers:    'Civica.CES.Processing.Consumers.exe'
+  service.path.cesprocessingconsumers:          '$(base.deploy.folder)\Services\$(service.name.cesprocessingconsumers)'
+
+  # CESTimetablingConsumers
+  service.name.cestimetablingconsumers:         'CESTimetablingConsumers-$(env.name)'
+  service.executable.cestimetablingconsumers:   'Civica.CES.Timetabling.Consumers.exe'
+  service.path.cestimetablingconsumers:         '$(base.deploy.folder)\Services\$(service.name.cestimetablingconsumers)'
+
+  # CommunityPortalAuditors
+  service.name.communityportalauditors:         'CommunityPortalAuditors-$(env.name)'
+  service.executable.communityportalauditors:   'Civica.CES.CommunityPortal.Auditing.exe'
+  service.path.communityportalauditors:         '$(base.deploy.folder)\Services\$(service.name.communityportalauditors)'
+
+  # CommunityPortalConsumers
+  service.name.communityportalconsumers:        'CommunityPortalAMQPConsumers-$(env.name)'
+  service.executable.communityportalconsumers:  'Civica.CES.CommunityPortal.Consumers.exe'
+  service.path.communityportalconsumers:        '$(base.deploy.folder)\Services\$(service.name.communityportalconsumers)'
+
+  # CESStandardConsumers
+  service.name.cesstandardconsumers:            'CESStandardConsumers-$(env.name)'
+  service.executable.cesstandardconsumers:      'Civica.CES.StandardAPI.Consumers.exe'
+  service.path.cesstandardconsumers:            '$(base.deploy.folder)\Services\$(service.name.cesstandardconsumers)'
+
+  # CESConsumerWorkerService
+  service.name.eventworker:                     'CESConsumerWorkerService-$(env.name)'
+  service.executable.eventworker:               'Civica.CES.Work.Worker.exe'
+  service.path.eventworker:                     '$(base.deploy.folder)\Services\$(service.name.eventworker)'
+
+  #=============================================================================
+  # Sage
+  #=============================================================================
+  sage.enabled:                             false
+  sage.user:                                ''
+  sage.password:                            ''
+  sage.company:                             ''
+  sage.senderid:                            ''
+  sage.senderpassword:                      ''
